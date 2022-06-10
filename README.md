@@ -1,6 +1,9 @@
 run tests with cmd 
 `mvn test`
 
+use `allure serve` 
+
+to generate report
 
 Automation testing task #1 (UI) Resource: xm.com
 
