@@ -1,6 +1,10 @@
+run tests with cmd 
+`mvn test`
+
+
 Automation testing task #1 (UI) Resource: xm.com
 
-Tools: Selenium/Java (preferable) OR Cypress/JavaScript OR <your_choise>
+Tools: Selenium/Java (preferable) 
 
 Task: Automate next use case to run in three different browser’s screen resolution:
 

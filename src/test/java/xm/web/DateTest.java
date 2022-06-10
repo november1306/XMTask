@@ -27,6 +27,14 @@ class DateTest {
     HomePage homePage;
     EconomicCalendar economicCalendar;
 
+    @BeforeEach
+    void initDriver() {
+        log.info("initialize Chrome driver ");
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("start-maximized");
+        driver = new ChromeDriver(chromeOptions);
+    }
 
     @ParameterizedTest
     @DisplayName("Calendar date check")
@@ -83,18 +91,16 @@ class DateTest {
         );
     }
 
-    @BeforeEach
-    void initDriver() {
-        log.info("initialize Chrome driver ");
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("start-maximized");
-        driver = new ChromeDriver(chromeOptions);
-    }
-
-    @Test
-        //TODO parametrize resolution here
-    void checkLegalDocs() {
+    @ParameterizedTest
+    @DisplayName("Risc warning & Risc disclosure")
+    @CsvSource({
+            "max, max",
+            "1024, 768",
+            "800, 600"
+    })
+    void checkLegalDocs(String width, String height) {
+        if (!(width.equals("max") && height.equals("max")))
+            driver.manage().window().setSize(new Dimension(parseInt(width), parseInt(height)));
         driver.get(BASE_URL);
         homePage = new HomePage(driver);
         homePage.acceptAllCookies();
