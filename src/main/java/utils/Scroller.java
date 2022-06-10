@@ -9,7 +9,7 @@ public class Scroller {
 
     private Scroller() {}
 
-    public static WebElement scrollTo(WebDriver driver, By locator) {
+    public static WebElement scrollTo(By locator, WebDriver driver) {
         WebElement element = driver.findElement(locator);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView(true);", element);

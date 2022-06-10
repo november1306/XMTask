@@ -1,10 +1,7 @@
 package xm.web;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Dimension;
@@ -32,8 +29,10 @@ class DateTest {
 
 
     @ParameterizedTest
+    @DisplayName("Calendar date check")
     @CsvSource({
             "max, max",
+            //TODO adapt to hidden menus, will fail for now ->
             "1024, 768",
             "800, 600"
     })

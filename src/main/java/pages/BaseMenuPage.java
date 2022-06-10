@@ -3,8 +3,10 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import static utils.Scroller.scrollTo;
 
-public abstract  class BaseMenuPage {
+
+public abstract class BaseMenuPage {
 
     protected WebDriver driver;
 
@@ -28,7 +30,8 @@ public abstract  class BaseMenuPage {
 
     public EconomicCalendar openEconomicCalendar() {
         toggleResearchAndEducation(); //isToggled() check is not needed here
-        driver.findElement(economicCalendar).click();
+        scrollTo(economicCalendar, driver)
+                .click();
         return new EconomicCalendar(driver);
     }
 }

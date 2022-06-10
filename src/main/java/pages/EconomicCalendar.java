@@ -26,7 +26,7 @@ public class EconomicCalendar extends BaseMenuPage {
     }
 
     public RiskWarningPage openRiskWarning() {
-        Scroller.scrollTo(driver, riskWarning)
+        Scroller.scrollTo(riskWarning, driver)
                 .click();
         return new RiskWarningPage(driver);
     }
