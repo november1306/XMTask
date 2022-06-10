@@ -5,11 +5,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class RiskWarning extends BaseMenuPage{
+public class RiskWarningPage extends BaseMenuPage{
 
     By warningContainer = By.cssSelector(".mt-350");
 
-    protected RiskWarning(WebDriver driver) {
+    protected RiskWarningPage(WebDriver driver) {
         super(driver);
         waitOnPage();
     }

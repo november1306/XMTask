@@ -1,11 +1,12 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.Scroller;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 public class EconomicCalendar extends BaseMenuPage {
 
@@ -24,28 +25,29 @@ public class EconomicCalendar extends BaseMenuPage {
         economicCalendarTable = new EconomicCalendarTable(driver);
     }
 
-    public RiskWarning openRiskWarning() {
-        scrollTo(riskWarning)
+    public RiskWarningPage openRiskWarning() {
+        Scroller.scrollTo(driver, riskWarning)
                 .click();
-        return new RiskWarning(driver);
+        return new RiskWarningPage(driver);
     }
 
     public void openRiskDisclosure() {
+        String originalWindow = driver.getWindowHandle();
+
         driver.findElement(riskDisclosure).click();
+        wait.until(numberOfWindowsToBe(2));
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (!originalWindow.contentEquals(windowHandle)) {
+                driver.switchTo().window(windowHandle);
+                break;
+            }
+        }
     }
 
 
     private void waitOnPage() {
         driver.switchTo().defaultContent();
         wait.until(ExpectedConditions.presenceOfElementLocated(calendarWrapper));
-    }
-
-    private WebElement scrollTo(By locator) {
-        WebElement element = driver.findElement(locator);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
-        js.executeScript("scrollBy(0, -250);");
-        return element;
     }
 
 

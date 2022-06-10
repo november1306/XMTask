@@ -5,6 +5,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,6 +20,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 class DateTest {
     private Logger log = LoggerFactory.getLogger(DateTest.class);
     static final String BASE_URL = "https://www.xm.com/";
@@ -26,17 +31,15 @@ class DateTest {
     EconomicCalendar economicCalendar;
 
 
-    @BeforeEach
-    void initDriver() {
-        log.info("initialize Chrome driver ");
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("start-maximized");
-        driver = new ChromeDriver(chromeOptions);
-    }
-
-    @Test
-    void checkDateTest() {
+    @ParameterizedTest
+    @CsvSource({
+            "max, max",
+            "1024, 768",
+            "800, 600"
+    })
+    void checkDateTest(String width, String height) {
+        if (!(width.equals("max") && height.equals("max")))
+            driver.manage().window().setSize(new Dimension(parseInt(width), parseInt(height)));
         driver.get(BASE_URL);
         homePage = new HomePage(driver);
         homePage.acceptAllCookies();
@@ -58,8 +61,6 @@ class DateTest {
                 .clickThisWeek()
                 .getDateRange();
 
-        economicCalendar.openRiskDisclosure();
-        economicCalendar.openRiskWarning();
 
         //TODO assertion sensitive to incorrect GMT time zone
         Assertions.assertAll(
@@ -81,8 +82,33 @@ class DateTest {
                 () -> Assertions.assertEquals(LocalDate.now().with(DayOfWeek.SATURDAY), thisWeekDates.get(1),
                         "this week date is incorrect")
         );
+    }
 
+    @BeforeEach
+    void initDriver() {
+        log.info("initialize Chrome driver ");
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("start-maximized");
+        driver = new ChromeDriver(chromeOptions);
+    }
 
+    @Test
+        //TODO parametrize resolution here
+    void checkLegalDocs() {
+        driver.get(BASE_URL);
+        homePage = new HomePage(driver);
+        homePage.acceptAllCookies();
+        economicCalendar = homePage.openEconomicCalendar();
+
+        String originalWindow = driver.getWindowHandle();
+        economicCalendar.openRiskDisclosure();
+        Assertions.assertTrue(driver.getCurrentUrl().contains("docs/XMGlobal-Risk-Disclosures-for-Financial-Instruments.pdf"));
+
+        driver.close();
+        driver.switchTo().window(originalWindow);
+        economicCalendar.openRiskWarning();
+        Assertions.assertTrue(driver.getCurrentUrl().contains("/risk_warning"));
     }
 
 
